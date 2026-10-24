@@ -74,11 +74,11 @@ jobs:
         with:
           path: agent
           persist-credentials: false
-      - name: Checkout Panel repository
+      - name: Checkout Nezha repository
         uses: actions/checkout@v7.0.1
         with:
           repository: CyL-Cly/wushang-panel
-          path: panel
+          path: nezha
           persist-credentials: false
       - name: Set up Go
         uses: actions/setup-go@v7
@@ -86,7 +86,7 @@ jobs:
           go-version: ^1.26.1
           cache: false
       - name: Prepare Dashboard build inputs
-        working-directory: panel
+        working-directory: nezha
         run: |
           go install github.com/swaggo/swag/cmd/swag@v1.16.6
           mkdir -p cmd/dashboard/user-dist cmd/dashboard/admin-dist
@@ -94,18 +94,18 @@ jobs:
           printf 'placeholder\n' > cmd/dashboard/admin-dist/placeholder.txt
           swag init --pd -d cmd/dashboard -g main.go -o cmd/dashboard/docs
       - name: Require Agent workflow policy tests
-        working-directory: panel
+        working-directory: nezha
         run: |
           go test -mod=readonly -tags=agentcompat -list '^TestPolicy_AgentQualityWorkflow$' ./integration/agentcompat/internal/workflowpolicy | grep -Fx 'TestPolicy_AgentQualityWorkflow'
           go test -mod=readonly -tags=agentcompat -list '^TestPolicy_AgentStressWorkflowRunsPinnedCrossRepositoryTest$' ./integration/agentcompat/internal/workflowpolicy | grep -Fx 'TestPolicy_AgentStressWorkflowRunsPinnedCrossRepositoryTest'
           go test -mod=readonly -tags=agentcompat -run '^(TestPolicy_AgentQualityWorkflow|TestPolicy_AgentStressWorkflowRunsPinnedCrossRepositoryTest)$' -count=1 ./integration/agentcompat/internal/workflowpolicy
       - name: Require named stress test
-        working-directory: panel
+        working-directory: nezha
         run: go test -mod=readonly -tags=agentcompat -list '^TestStressPRFullEightAgentExactlyOnce$' ./integration/agentcompat/internal/scenario | grep -Fx 'TestStressPRFullEightAgentExactlyOnce'
       - name: Run PR-full agent compatibility stress
-        working-directory: panel
+        working-directory: nezha
         env:
-          AGENTCOMPAT_NEZHA_SOURCE: ${{ github.workspace }}/panel
+          AGENTCOMPAT_NEZHA_SOURCE: ${{ github.workspace }}/nezha
           AGENTCOMPAT_AGENT_SOURCE: ${{ github.workspace }}/agent
         run: go test -mod=readonly -tags=agentcompat -run '^TestStressPRFullEightAgentExactlyOnce$' -count=1 -v ./integration/agentcompat/internal/scenario
 
