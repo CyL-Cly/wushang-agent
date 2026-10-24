@@ -1,0 +1,53 @@
+wushang-agent
+=============
+
+This repository is a second-party (二次开发) build derived from the following
+upstream project:
+
+    Nezha Monitoring Agent
+    https://github.com/nezhahq/agent
+    Copyright 2020 naiba
+    Licensed under the Apache License, Version 2.0 (see LICENSE)
+
+The original LICENSE file is retained unmodified. This NOTICE records the
+modifications made for this build, as required by Section 4(b) of the
+Apache License, Version 2.0.
+
+Modifications made in this repository
+-------------------------------------
+
+1. Go module path
+   `github.com/nezhahq/agent` -> `github.com/CyL-Cly/wushang-agent`
+   All internal import paths were rewritten accordingly. Third-party
+   dependencies under the `github.com/nezhahq/` prefix (go-github-selfupdate,
+   service, xsyslog) are external modules and were left unchanged.
+
+2. Self-update feed
+   `cmd/agent/main.go` no longer resolves releases from the upstream
+   mirror chain (`naibahq/agent` on Gitee, `naiba/nezha-agent` on AtomGit,
+   `nezhahq/agent` on GitHub). Self-update is pinned to
+   `CyL-Cly/wushang-agent` so an installed agent cannot be silently replaced
+   by an upstream binary. The `use_gitee_to_upgrade` and
+   `use_atomgit_to_upgrade` configuration keys are still parsed for backwards
+   compatibility but no longer influence the update source.
+
+3. CI and repository automation
+   Upstream release, AtomGit/Gitee sync, contributors and CodeQL workflows
+   were removed. Only `.github/workflows/test.yml` is retained, with the
+   cross-repository checkout repointed to `CyL-Cly/wushang-panel`.
+
+4. Documentation
+   Project name, README and NOTICE updated to identify this as a
+   second-party build.
+
+Binary name left unchanged
+--------------------------
+The produced binary is still named `nezha-agent` (`.goreleaser.yml`,
+`cmd/agent/main.go` and the install scripts all agree on this name, and the
+self-update client matches release assets by it). Renaming it would break
+self-update asset resolution and existing install scripts, so it was kept as
+a functional identifier rather than a branding one.
+
+This is an unofficial build. It is not affiliated with or endorsed by the
+Nezha Monitoring project, and changes made here are not contributed back
+upstream.
