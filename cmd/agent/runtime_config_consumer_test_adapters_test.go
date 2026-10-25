@@ -33,10 +33,6 @@ func handleHttpGetTask(task *pb.Task, result *pb.TaskResult) {
 	handleHttpGetTaskWithConfig(taskFeatureGatesFrom(loadLegacyHandlerTestConfig()), task, result)
 }
 
-func handleCommandTask(task *pb.Task, result *pb.TaskResult) {
-	handleCommandTaskWithConfig(taskFeatureGatesFrom(loadLegacyHandlerTestConfig()), task, result)
-}
-
 func handleReportConfigTask(result *pb.TaskResult) {
 	handleReportConfigTaskWithConfig(loadLegacyHandlerTestConfig(), result)
 }

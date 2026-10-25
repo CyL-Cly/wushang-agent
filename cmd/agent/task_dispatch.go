@@ -124,8 +124,6 @@ func doTaskWithSnapshot(
 		handleIcmpPingTaskWithConfig(gates, task, result)
 	case model.TaskTypeTCPPing:
 		handleTcpPingTaskWithConfig(gates, task, result)
-	case model.TaskTypeCommand:
-		handleCommandTaskWithConfig(gates, task, result)
 	case model.TaskTypeUpgrade:
 		handleUpgradeTaskWithConfig(updateConfigTupleFrom(config), gates)
 	case model.TaskTypeTerminalGRPC:
